@@ -1,14 +1,26 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(ggplot2)
 
 file <- tbl_df(read.csv("activity.csv"))
@@ -17,7 +29,8 @@ file$date <- as.Date(file$date)
 
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+```r
 ## Calculate the mean of steps taken per Day
 stepsPerDay <- file %>% na.omit %>% group_by(date) %>% summarise(totalSteps=sum(steps))
 
@@ -27,15 +40,31 @@ histo <- ggplot(stepsPerDay,aes(x=totalSteps)) +
             xlab("Total Steps") +
             geom_histogram(binwidth=1000)
 histo
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 ## Calculate and report the mean and median of the total
 ## number of steps taken per day
 mean(stepsPerDay$totalSteps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(stepsPerDay$totalSteps)
 ```
 
+```
+## [1] 10765
+```
+
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 ## What is the daily activity pattern? Make a time series
 stepsByInterval <- select(file, c(1, 3))
 
@@ -53,12 +82,21 @@ ggplot(data=stepsByInterval,
     xlab("interval") +
     geom_line() +
     ggtitle("Average Steps Taken by Interval Across Days")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 ## What is the maximum value average across all days in the dataset
 max(stepsByInterval$avg)
 ```
+
+```
+## [1] 206.1698
+```
 ## Imputing missing values
-```{r}
+
+```r
 ## Input missing values, total number of NAs within the dataset
 isNA <- file %>% select(1) %>% is.na %>% table()
 
@@ -76,15 +114,30 @@ histo <- ggplot(stepsPerDaySum,aes(x=steps)) +
     xlab("Total Steps") +
     geom_histogram(binwidth=1000)
 histo
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
 ## Calculate and report the mean and median of the total
 ## number of steps taken per day
 mean(stepsPerDaySum$steps)
-median(stepsPerDaySum$steps)
+```
 
 ```
+## [1] 10749.77
+```
+
+```r
+median(stepsPerDaySum$steps)
+```
+
+```
+## [1] 10641
+```
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 ## Are there differences in activity patterns between weekdays and weekends?
 ## create new variable indicating weekend or weekday
 
@@ -105,5 +158,6 @@ panePlot <- ggplot(stepsPerDayNAdates, aes(interval, avg)) +
             facet_grid(dayType ~ .) +
             geom_line()
 panePlot
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
