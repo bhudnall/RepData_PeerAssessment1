@@ -104,12 +104,16 @@ ggplot(data=stepsByInterval,
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 ```r
-## What is the maximum value average across all days in the dataset
-max(stepsByInterval$avg)
+## Which 5 minute interval on average across all the days in the dataset, contains the maximum number
+## of steps
+stepsByInterval[which.max(stepsByInterval$avg),]
 ```
 
 ```
-## [1] 206.1698
+## Source: local data frame [1 x 2]
+## 
+##   interval      avg
+## 1      835 206.1698
 ```
 ## Imputing missing values
 To answer this question, I first used the original file and select the first column. I then used is.na to show within
