@@ -75,7 +75,10 @@ file$date &lt;- as.Date(file$date)</code></pre>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level2">
 <h2>What is mean total number of steps taken per day?</h2>
-<pre class="r"><code>## Calculate the mean of steps taken per Day
+<p>The following uses dplyr to shape the data into a data frame that will omit NA values and group the total number of steps by the date dimension.</p>
+<p>It then uses ggplot2 to plot the data into a histogram that shows the frequency of total steps.</p>
+<p>Following this last step, it runs the mean and median calculation of total steps taken.</p>
+<pre class="r"><code>## Calculate the total number of steps taken per Day
 stepsPerDay &lt;- file %&gt;% na.omit %&gt;% group_by(date) %&gt;% summarise(totalSteps=sum(steps))
 
 ## Make a Histogram showing total steps per day
@@ -94,8 +97,10 @@ mean(stepsPerDay$totalSteps)</code></pre>
 </div>
 <div id="what-is-the-average-daily-activity-pattern" class="section level2">
 <h2>What is the average daily activity pattern?</h2>
+<p>To answer this question, I first reshaped the data by omitting the NA values, then select the interval and steps columns, and finally calculate the average steps taken grouped by the interval count.</p>
+<p>I then plotted this data into a line plot and show the average steps taken by interval across days.</p>
+<p>The last step is to calculate the interval with the maximum average step count.</p>
 <pre class="r"><code>## What is the daily activity pattern? Make a time series
-stepsByInterval &lt;- select(file, c(1, 3))
 
 stepsByInterval &lt;- file%&gt;%
     na.omit%&gt;%
@@ -118,6 +123,9 @@ max(stepsByInterval$avg)</code></pre>
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
+<p>To answer this question, I first used the original file and select the first column. I then used is.na to show within this columns whether a value is NA or not. Following that I created a table to display the total NA values (TRUE) and the amount that isn’t NA (FALSE)</p>
+<p>The next part is to devise a strategy, which is: take the average step count by interval and then (already calculated this on the previous question) and apply the average to all the NA values. To do this, I used an inner join to combine the original file with the new file (stepsByInterval). From there, I used ifelse logic to say “if the value in steps is NA then replace it with the average, if not then leave it”. I then converted it to an integer value grouped the data by date and created a summary table of total steps per day.</p>
+<p>Following all of this, I created a histogram – same that was used in question 1. Then recalculated the mean and median using the updated data set. There is not a huge difference in the results using the updated data set.</p>
 <pre class="r"><code>## Input missing values, total number of NAs within the dataset
 isNA &lt;- file %&gt;% select(1) %&gt;% is.na %&gt;% table()
 
@@ -145,6 +153,9 @@ mean(stepsPerDaySum$steps)</code></pre>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
+<p>For the last question, I first used the weekdays function to create a new column that shows the day of the week based on the date column. From there, I used ifelse logic to assign values of either “weekend” or “weekday” to a new column titled dayType.</p>
+<p>After this, I then selected the steps, interval, and dayType columns while calculating the average value of steps by interval and dayType.</p>
+<p>Finally, I then create the facet grid that contains two charts: one with average steps by weekday and one for weekend.</p>
 <pre class="r"><code>## Are there differences in activity patterns between weekdays and weekends?
 ## create new variable indicating weekend or weekday
 
